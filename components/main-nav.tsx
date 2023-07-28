@@ -1,41 +1,38 @@
-import * as React from "react"
-import Link from "next/link"
+"use client"
 
-import { NavItem } from "@/types/nav"
-import { siteConfig } from "@/config/site"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+
+import { Category } from "@/types/nav"
 import { cn } from "@/lib/utils"
-import { Icons } from "@/components/icons"
 
 interface MainNavProps {
-  items?: NavItem[]
+  data: Category[]
 }
 
-export function MainNav({ items }: MainNavProps) {
+const MainNav: React.FC<MainNavProps> = ({ data }) => {
+  const pathname = usePathname()
+  const routes = data.map((route) => ({
+    href: `/category/${route.id}`,
+    label: route.name,
+    active: pathname === `/category/${route.id}`,
+  }))
   return (
-    <div className="flex gap-6 md:gap-10">
-      <Link href="/" className="flex items-center space-x-2">
-        <Icons.logo className="h-6 w-6" />
-        <span className="inline-block font-bold">{siteConfig.name}</span>
-      </Link>
-      {items?.length ? (
-        <nav className="flex gap-6">
-          {items?.map(
-            (item, index) =>
-              item.href && (
-                <Link
-                  key={index}
-                  href={item.href}
-                  className={cn(
-                    "flex items-center text-sm font-medium text-muted-foreground",
-                    item.disabled && "cursor-not-allowed opacity-80"
-                  )}
-                >
-                  {item.title}
-                </Link>
-              )
+    <nav className="mx-6 flex items-center space-x-4 lg:space-x-6">
+      {routes.map((route) => (
+        <Link
+          key={route.href}
+          href={route.href}
+          className={cn(
+            "text-sm font-medium transition-colors hover:text-black",
+            route.active ? "text-black" : "text-neutral-500"
           )}
-        </nav>
-      ) : null}
-    </div>
+        >
+          {route.label}
+        </Link>
+      ))}
+    </nav>
   )
 }
+
+export default MainNav

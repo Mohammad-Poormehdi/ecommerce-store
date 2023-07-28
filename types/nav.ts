@@ -1,6 +1,10 @@
-export interface NavItem {
-  title: string
-  href?: string
-  disabled?: boolean
-  external?: boolean
+export interface Billboard {
+  id: string
+  label: string
+  imageUrl: string
+}
+export interface Category {
+  id: string
+  name: string
+  billboard: Billboard
 }
