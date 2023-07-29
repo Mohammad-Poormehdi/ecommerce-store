@@ -1,6 +1,7 @@
 import "@/styles/globals.css"
 import { Metadata } from "next"
 import { Urbanist } from "next/font/google"
+import Providers from "@/providers/providers"
 
 import { siteConfig } from "@/config/site"
 import Footer from "@/components/footer"
@@ -35,6 +36,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <html lang="en" suppressHydrationWarning>
         <head />
         <body className={urbanist.className}>
+          <Providers />
           <Navbar />
           {children}
           <Footer />
