@@ -3,9 +3,10 @@
 import { MouseEventHandler, useEffect, useState } from "react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
-import { Expand, ShoppingCart } from "lucide-react"
+import { Expand, ShoppingBagIcon, ShoppingCart } from "lucide-react"
 
 import { Product } from "@/types/products"
+import useCart from "@/hooks/use-cart"
 import usePreviewModal from "@/hooks/use-preview-modal"
 
 import PreviewModal from "../preview-modal"
@@ -17,6 +18,7 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+  const cart = useCart()
   const previewModal = usePreviewModal()
   const [isMounted, setIsMounted] = useState(false)
   useEffect(() => {
@@ -26,6 +28,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const onPreview: MouseEventHandler<HTMLButtonElement> = (event) => {
     event.stopPropagation()
     previewModal.onOpen(product)
+  }
+  const onAddtoCart: MouseEventHandler<HTMLButtonElement> = (event) => {
+    event.stopPropagation()
+    cart.addItem(product)
   }
   if (!isMounted) {
     return null
@@ -54,6 +60,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 onClick={onPreview}
               >
                 <Expand size={20} className="text-gray-600" />
+              </Button>
+              <Button
+                className="w-10 h-10 rounded-full p-0 max-md:hidden"
+                variant="secondary"
+                onClick={onAddtoCart}
+              >
+                <ShoppingBagIcon size={20} className="text-gray-600" />
               </Button>
             </div>
           </div>
