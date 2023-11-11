@@ -1,6 +1,9 @@
 "use client"
 
-import { useSearchParams } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
+import { useMutation } from "@tanstack/react-query"
+import axios from "axios"
+import { toast } from "react-hot-toast"
 
 import useCart from "@/hooks/use-cart"
 import { Button } from "@/components/ui/button"
@@ -9,6 +12,18 @@ import Currency from "@/components/ui/currency"
 interface SummaryProps {}
 
 const Summary: React.FC<SummaryProps> = ({}) => {
+  const router = useRouter()
+  const { mutate: placeOrder } = useMutation({
+    mutationFn: async (payload: { productIds: string[] }) => {
+      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/checkout`, payload)
+    },
+    onError: () => {
+      toast.error("Something went wrong please contact support")
+    },
+    onSuccess: () => {
+      router.push("/success")
+    },
+  })
   const searchParams = useSearchParams()
   const products = useCart((state) => state.products)
   const removeAll = useCart((state) => state.removeAll)
@@ -27,7 +42,16 @@ const Summary: React.FC<SummaryProps> = ({}) => {
             <Currency value={totalPrice.toString()} />
           </div>
         </div>
-        <Button className="w-full mt-6">Checkout</Button>
+        <Button
+          onClick={() =>
+            placeOrder({
+              productIds: products.map((product) => product.id),
+            })
+          }
+          className="w-full mt-6"
+        >
+          Checkout
+        </Button>
       </div>
     </>
   )

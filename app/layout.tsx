@@ -36,11 +36,12 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <html lang="en" suppressHydrationWarning>
         <head />
         <body className={urbanist.className}>
-          <Providers />
-          <Navbar />
-          {children}
-          <Footer />
-        </body>
+          <Providers>
+            <Navbar />
+            {children}
+            <Footer />
+          </Providers>
+        </body> 
       </html>
     </>
   )
